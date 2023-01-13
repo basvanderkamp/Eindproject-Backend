@@ -3,6 +3,9 @@ package nl.novi.homeprojects.dtos.input;
 import lombok.Getter;
 import lombok.Setter;
 import nl.novi.homeprojects.models.Assignment;
+import nl.novi.homeprojects.models.Executor;
+import nl.novi.homeprojects.models.File;
+import nl.novi.homeprojects.models.User;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -12,7 +15,11 @@ import java.util.List;
 public class ClientInputDto {
 
     @NotBlank
-    private String fullName;
+    private String username;
+    @NotBlank
+    private String firstname;
+    @NotBlank
+    private String lastname;
     @NotBlank
     private String mobile;
     @NotBlank
@@ -23,7 +30,12 @@ public class ClientInputDto {
     private String zipcode;
     @NotBlank
     private String email;
+    private String story;
 
     //Relations
-    private List<Assignment> assignment;
+    private User user;
+    private List<Assignment> assignments;
+    private Executor executor;
+
+    private File file;
 }

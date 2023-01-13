@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -17,19 +19,17 @@ import java.util.List;
 public class Executor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String username;
 
-    private String fullName;
-    private int age;
-    private String mobile;
-    private String adres;
-    private String place;
-    private String zipcode;
-    private String email;
+    @OneToOne(mappedBy = "executor")
+    private Assignment assignment;
+
+    @OneToOne(mappedBy = "executor")
+    private Client client;
 
 
-    //Relations
-    @OneToMany(mappedBy = "executor")
-    private List<Assignment> assignment;
 }
+
+
+
+

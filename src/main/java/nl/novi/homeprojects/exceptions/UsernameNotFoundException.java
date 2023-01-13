@@ -1,4 +1,4 @@
-package nl.novi.homeprojects.exeptions;
+package nl.novi.homeprojects.exceptions;
 
 public class UsernameNotFoundException extends RuntimeException {
 
