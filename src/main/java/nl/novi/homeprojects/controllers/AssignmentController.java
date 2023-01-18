@@ -3,6 +3,7 @@ package nl.novi.homeprojects.controllers;
 import nl.novi.homeprojects.dtos.input.AssignmentInputDto;
 import nl.novi.homeprojects.dtos.output.AssignmentOutputDto;
 import nl.novi.homeprojects.services.AssignmentService;
+import nl.novi.homeprojects.services.ClientService;
 import nl.novi.homeprojects.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +68,12 @@ public class AssignmentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAssignmentById(@PathVariable String id) {
         return ResponseEntity.ok(assignmentService.deleteAssignment(id));
+    }
+
+
+    @PutMapping("/{id}/executors/{executorId}")
+    public void assignExecutorToAssignment(@PathVariable String id, @PathVariable String executorId) {
+        AssignmentService.assignExecutorToAssignment(id, executorId);
     }
 
 

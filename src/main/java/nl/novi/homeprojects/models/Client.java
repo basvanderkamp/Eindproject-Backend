@@ -26,18 +26,24 @@ public class Client {
     private String email;
     private String story;
 
+    public Client(String username, String firstname, String lastname, String mobile, String adres, String place, String zipcode, String email, String story) {
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.mobile = mobile;
+        this.adres = adres;
+        this.place = place;
+        this.zipcode = zipcode;
+        this.email = email;
+        this.story = story;
+    }
 
     //Relations
     @OneToMany(mappedBy = "client")
-    @JsonIgnore
-//    @JoinTable(joinColumns = @JoinColumn(name = "client_id"),
-//            inverseJoinColumns = @JoinColumn(name = "assignment_id"),
-//            name = "client_assignment")
+    @JsonIgnoreProperties("assignments")
     private List <Assignment> assignments;
 
-    public void addAssignment(Assignment assignment) {
-        this.assignments.add(assignment);
-    }
+
 
     @OneToOne(mappedBy = "client")
     @JsonIgnore

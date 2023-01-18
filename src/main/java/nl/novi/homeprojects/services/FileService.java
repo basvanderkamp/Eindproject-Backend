@@ -3,17 +3,23 @@ package nl.novi.homeprojects.services;
 import nl.novi.homeprojects.models.File;
 import nl.novi.homeprojects.repositorys.FilesRepository;
 import org.springframework.beans.factory.annotation.Value;
+
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
-import java.util.stream.Stream;
+
 
 
 @Service
@@ -59,13 +65,26 @@ public class FileService {
         return fileName;
     }
 
-    public File getFile(String id) {
-        return filesRepository.findById(id).get();
+    public Resource downLoadFile(String fileName) {
+
+        Path path = Paths.get(fileStorageLocation).toAbsolutePath().resolve(fileName);
+
+        Resource resource;
+
+        try {
+            resource = new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Issue in reading the file", e);
+        }
+
+        if(resource.exists()&& resource.isReadable()) {
+            return resource;
+        } else {
+            throw new RuntimeException("the file doesn't exist or is not readable");
+        }
     }
 
-    public Stream<File> getAllFiles() {
-        return filesRepository.findAll().stream();
-    }
 }
+
 
 

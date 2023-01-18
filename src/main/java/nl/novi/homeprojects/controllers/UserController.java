@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<UserOutputDto> createKlant(@RequestBody UserInputDto inputDto) {;
+    public ResponseEntity<UserOutputDto> createUser(@RequestBody UserInputDto inputDto) {;
 
         String newUsername = userService.createUser(inputDto);
         userService.addAuthority(newUsername, "ROLE_USER");
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{username}")
-    public ResponseEntity<UserOutputDto> updateKlant(@PathVariable("username") String username, @RequestBody UserOutputDto dto) {
+    public ResponseEntity<UserOutputDto> updateUser(@PathVariable("username") String username, @RequestBody UserOutputDto dto) {
 
         userService.updateUser(username, dto);
 
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{username}")
-    public ResponseEntity<Object> deleteKlant(@PathVariable("username") String username) {
+    public ResponseEntity<Object> deleteUser(@PathVariable("username") String username) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }

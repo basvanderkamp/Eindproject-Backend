@@ -5,14 +5,8 @@ import nl.novi.homeprojects.dtos.input.ClientInputDto;
 import nl.novi.homeprojects.dtos.output.AssignmentOutputDto;
 import nl.novi.homeprojects.dtos.output.ClientOutputDto;
 import nl.novi.homeprojects.exceptions.RecordNotFoundException;
-import nl.novi.homeprojects.models.Assignment;
-import nl.novi.homeprojects.models.Client;
-import nl.novi.homeprojects.models.File;
-import nl.novi.homeprojects.models.User;
-import nl.novi.homeprojects.repositorys.AssignmentRepository;
-import nl.novi.homeprojects.repositorys.ClientRepository;
-import nl.novi.homeprojects.repositorys.FilesRepository;
-import nl.novi.homeprojects.repositorys.UserRepository;
+import nl.novi.homeprojects.models.*;
+import nl.novi.homeprojects.repositorys.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,12 +22,15 @@ public class ClientService {
     public static AssignmentRepository assignmentRepository;
     public static UserRepository userRepository;
     public static FilesRepository filesRepository;
+    private static ExecutorRepository executorRepository;
 
-    public ClientService (ClientRepository clientRepository, AssignmentRepository assignmentRepository, UserRepository userRepository, FilesRepository filesRepository) {
+    public ClientService (ClientRepository clientRepository, AssignmentRepository assignmentRepository, UserRepository userRepository, FilesRepository filesRepository,
+                          ExecutorRepository executorRepository) {
         this.clientRepository = clientRepository;
         this.assignmentRepository = assignmentRepository;
         this.userRepository = userRepository;
         this.filesRepository = filesRepository;
+        this.executorRepository = executorRepository;
     }
 
 
@@ -53,11 +50,13 @@ public class ClientService {
         outputDto.setAssignments(client.getAssignments());
         outputDto.setUser(client.getUser());
         outputDto.setFile(client.getFile());
+        outputDto.setExecutor(client.getExecutor());
         return outputDto;
     }
 
     public String createClient(ClientInputDto clientInputDto) {
         Client newClient = new Client();
+        Executor executor = new Executor();
 
         newClient.setUsername(clientInputDto.getUsername());
         newClient.setFirstname(clientInputDto.getFirstname());
@@ -69,11 +68,16 @@ public class ClientService {
         newClient.setEmail(clientInputDto.getEmail());
         newClient.setStory(clientInputDto.getStory());
         newClient.setAssignments(clientInputDto.getAssignments());
-
-
-
+        newClient.setExecutor(clientInputDto.getExecutor());
         Client savedClient = clientRepository.save(newClient);
-        return savedClient.getUsername();
+
+        executor.setName(clientInputDto.getUsername());
+        Executor savedExecutor= executorRepository.save(executor);
+        
+        assignExecutorToClient(newClient.getUsername(), executor.getName());
+
+
+        return savedClient.getUsername()+ savedExecutor.getName();
     }
 
     public Iterable<ClientOutputDto> getClients() {
@@ -129,6 +133,7 @@ public class ClientService {
             updateClient.setAssignments(clientInputDto.getAssignments());
             updateClient.setUser(clientInputDto.getUser());
             updateClient.setFile(clientInputDto.getFile());
+            updateClient.setExecutor(clientInputDto.getExecutor());
 
 
             clientRepository.save(updateClient);
@@ -149,7 +154,24 @@ public class ClientService {
         } else {
             Client client = optionalClient.get();
             Assignment assignment = optionalAssignment.get();
-            client.addAssignment(assignment);
+            assignment.setClient(client);
+            assignmentRepository.save(assignment);
+        }
+    }
+    public static void assignExecutorToClient(String id, String executorId) {
+
+        Optional<Client> optionalClient = clientRepository.findById(id);
+        Optional<Executor> optionalExecutor = executorRepository.findById(executorId);
+
+        if (optionalExecutor.isEmpty()) {
+            throw new RecordNotFoundException("Executor with username id: " + executorId + " not found");
+        } else if (optionalClient.isEmpty()) {
+            throw new RecordNotFoundException("Client with username id: " + id + " not found");
+
+        } else {
+            Client client = optionalClient.get();
+            Executor executor = optionalExecutor.get();
+            client.setExecutor(executor);
             clientRepository.save(client);
         }
     }

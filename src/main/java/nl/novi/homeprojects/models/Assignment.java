@@ -1,12 +1,13 @@
 package nl.novi.homeprojects.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter
@@ -25,13 +26,23 @@ public class Assignment {
     @Enumerated(EnumType.STRING)
     private AssignmentStatus assignmentStatus;
 
+    public Assignment(String title, String description, String essentials, String demands, String reward, AssignmentStatus assignmentStatus) {
+        this.title = title;
+        this.description = description;
+        this.essentials = essentials;
+        this.demands = demands;
+        this.reward = reward;
+        this.assignmentStatus = assignmentStatus;
+    }
 
     //Relations
     @ManyToOne
+    @JsonIncludeProperties(value = {"username","firstname", "lastname", "mobile", "adres", "place", "zipcode", "email", "story"})
     private Client client;
 
 
-    @OneToOne
+    @ManyToOne
+    @JsonIgnoreProperties("assignments")
     private Executor executor;
 
 

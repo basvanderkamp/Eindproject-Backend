@@ -4,9 +4,12 @@ import nl.novi.homeprojects.dtos.input.AssignmentInputDto;
 import nl.novi.homeprojects.dtos.output.AssignmentOutputDto;
 import nl.novi.homeprojects.exceptions.RecordNotFoundException;
 import nl.novi.homeprojects.models.Assignment;
+import nl.novi.homeprojects.models.AssignmentStatus;
 import nl.novi.homeprojects.models.Client;
+import nl.novi.homeprojects.models.Executor;
 import nl.novi.homeprojects.repositorys.AssignmentRepository;
 import nl.novi.homeprojects.repositorys.ClientRepository;
+import nl.novi.homeprojects.repositorys.ExecutorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,10 +21,12 @@ import static nl.novi.homeprojects.models.AssignmentStatus.*;
 public class AssignmentService {
     public static AssignmentRepository assignmentRepository;
     public static ClientRepository clientRepository;
+    public static ExecutorRepository executorRepository;
 
-    public AssignmentService (AssignmentRepository assignmentRepository, ClientRepository clientRepository){
+    public AssignmentService ( AssignmentRepository assignmentRepository, ClientRepository clientRepository, ExecutorRepository executorRepository) {
         this.assignmentRepository = assignmentRepository;
         this.clientRepository = clientRepository;
+        this.executorRepository = executorRepository;
     }
 
 
@@ -36,8 +41,8 @@ public class AssignmentService {
         newAssignment.setReward(assignmentInputDto.getReward());
         newAssignment.setClient(assignmentInputDto.getClient());
         newAssignment.setAssignmentStatus(AVAILABLE);
-
         Assignment savedAssignment = assignmentRepository.save(newAssignment);
+
 
         return "Assignment with title: " + savedAssignment.getTitle() + " created!";
     }
@@ -94,6 +99,25 @@ public class AssignmentService {
 
             assignmentRepository.save(updateAssignment);
             return transferToAssignmentDto(updateAssignment);
+        }
+    }
+
+    public static void assignExecutorToAssignment(String id, String executorId) {
+
+        Optional<Assignment> optionalAssignment = assignmentRepository.findById(id);
+        Optional<Executor> optionalExecutor = executorRepository.findById(executorId);
+
+        if (optionalExecutor.isEmpty()) {
+            throw new RecordNotFoundException("Executor with username id: " + executorId + " not found");
+        } else if (optionalAssignment.isEmpty()) {
+            throw new RecordNotFoundException("Assignment with title id: " + id + " not found");
+
+        } else {
+            Assignment assignment = optionalAssignment.get();
+            Executor executor = optionalExecutor.get();
+            assignment.setExecutor(executor);
+            assignment.setAssignmentStatus(ACCEPTED);
+            assignmentRepository.save(assignment);
         }
     }
 

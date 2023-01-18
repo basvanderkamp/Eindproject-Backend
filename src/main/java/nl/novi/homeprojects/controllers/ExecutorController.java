@@ -29,18 +29,7 @@ public class ExecutorController {
 
 
 
-    @PostMapping("")
-    public ResponseEntity<String> createExecutor(@RequestBody ExecutorInputDto executorInputDto, BindingResult br) {
 
-        if (br.hasErrors()) {
-            String errorString = Utils.reportErrors(br);
-            return new ResponseEntity<>(errorString, HttpStatus.BAD_REQUEST);
-        } else {
-            String createdId = ExecutorService.createExecutor(executorInputDto);
 
-            URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/executors/" + createdId).toUriString());
 
-            return ResponseEntity.created(uri).body("Executor with username: " + executorInputDto.getUsername() + " created!");
-        }
-    }
 }

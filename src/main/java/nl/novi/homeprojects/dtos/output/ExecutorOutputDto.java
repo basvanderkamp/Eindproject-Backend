@@ -5,11 +5,13 @@ import lombok.Setter;
 import nl.novi.homeprojects.models.Assignment;
 import nl.novi.homeprojects.models.Client;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class ExecutorOutputDto {
 
-    private String username;
+    private String name;
     private Client client;
-    private Assignment assignment;
+    private List<Assignment> assignments;
 }

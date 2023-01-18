@@ -2,6 +2,7 @@ package nl.novi.homeprojects.models;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,10 @@ public class File {
 
     @Id
     private String fileName;
-
     private String contentType;
     private String url;
 
-    @Lob
-    private byte[] data;
+
 
     public File(String fileName, String contentType, String url) {
         this.fileName = fileName;
@@ -33,6 +32,7 @@ public class File {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     private Client client;
 
 }

@@ -27,19 +27,11 @@ public class ExecutorService {
     public ExecutorOutputDto transferToExecutorDto(Executor executor) {
         ExecutorOutputDto outputDto = new ExecutorOutputDto();
 
-        outputDto.setUsername(executor.getUsername());
-        outputDto.setAssignment(executor.getAssignment());
+        outputDto.setName(executor.getName());
+        outputDto.setAssignments(executor.getAssignments());
         return outputDto;
     }
 
-    public static String createExecutor(ExecutorInputDto executorInputDto) {
-        Executor newExecutor = new Executor();
 
-        newExecutor.setUsername(executorInputDto.getUsername());
-
-
-        Executor savedExecutor = executorRepository.save(newExecutor);
-        return savedExecutor.getUsername();
-    }
 }
 

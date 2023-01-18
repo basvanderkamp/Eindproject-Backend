@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Objects;
 
@@ -71,6 +70,7 @@ public class ClientController {
     public void assignAssignmentToClient(@PathVariable String id, @PathVariable String assignmentId) {
         ClientService.assignAssignmentToClient(id, assignmentId);
     }
+
 
 
 

@@ -1,6 +1,7 @@
 package nl.novi.homeprojects.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,12 @@ public class User {
         @Column
         private String apikey;
 
-
+        public User(String username, String password, boolean enabled, String apikey) {
+                this.username = username;
+                this.password = password;
+                this.enabled = enabled;
+                this.apikey = apikey;
+        }
 
         @OneToMany(
                 targetEntity = Authority.class,
@@ -39,6 +45,7 @@ public class User {
                 cascade = CascadeType.ALL,
                 orphanRemoval = true,
                 fetch = FetchType.EAGER)
+        @JsonIgnoreProperties("authorities")
         private Set<Authority> authorities = new HashSet<>();
 
         public void addAuthority(Authority authority) {
@@ -50,6 +57,7 @@ public class User {
 
 
         @OneToOne(cascade = CascadeType.ALL)
+        @JsonIgnore
         private Client client;
 
 

@@ -61,9 +61,10 @@ public class SpringSecurityConfig {
 
                 //----------------------------------------Endpoints Clients--------------------------------------
                  .antMatchers(HttpMethod.POST,"/clients").permitAll()
+                .antMatchers(HttpMethod.POST,"/clients/**").permitAll()
                  .antMatchers(HttpMethod.GET,"/clients").hasAnyRole("ADMIN","USER")
                  .antMatchers(HttpMethod.DELETE,"/clients/**").hasRole("ADMIN")
-                 .antMatchers(HttpMethod.PUT,"/clients/**").permitAll()
+                 .antMatchers(HttpMethod.PUT,"/clients/**").hasAnyRole("ADMIN","USER")
 
 
                 //----------------------------------------Endpoints Assignments--------------------------------------
@@ -75,10 +76,7 @@ public class SpringSecurityConfig {
 
                 //----------------------------------------Endpoints Uploads--------------------------------------
                 /*voeg de antmatchers toe voor admin(post en delete) en user (overige)*/
-                //.antMatchers(HttpMethod.POST,"/upload").permitAll()
-                .antMatchers(HttpMethod.GET,"/upload").hasAnyRole("ADMIN","USER")
-                .antMatchers(HttpMethod.DELETE,"/upload/**").hasAnyRole("ADMIN","USER")
-                .antMatchers(HttpMethod.PUT,"/upload/**").hasAnyRole("ADMIN","USER")
+
 
 
 
