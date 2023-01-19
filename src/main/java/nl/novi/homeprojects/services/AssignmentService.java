@@ -4,14 +4,11 @@ import nl.novi.homeprojects.dtos.input.AssignmentInputDto;
 import nl.novi.homeprojects.dtos.output.AssignmentOutputDto;
 import nl.novi.homeprojects.exceptions.RecordNotFoundException;
 import nl.novi.homeprojects.models.Assignment;
-import nl.novi.homeprojects.models.AssignmentStatus;
-import nl.novi.homeprojects.models.Client;
 import nl.novi.homeprojects.models.Executor;
 import nl.novi.homeprojects.repositorys.AssignmentRepository;
 import nl.novi.homeprojects.repositorys.ClientRepository;
 import nl.novi.homeprojects.repositorys.ExecutorRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -43,9 +40,9 @@ public class AssignmentService {
         newAssignment.setAssignmentStatus(AVAILABLE);
         Assignment savedAssignment = assignmentRepository.save(newAssignment);
 
-
         return "Assignment with title: " + savedAssignment.getTitle() + " created!";
     }
+
 
     public Iterable<AssignmentOutputDto> getAssignments() {
         ArrayList<AssignmentOutputDto> assignmentList = new ArrayList<>();
@@ -63,11 +60,11 @@ public class AssignmentService {
 
         if (assignment.isEmpty()) {
             throw new RecordNotFoundException("No Assignment found with id: " + id);
-
         } else {
             return transferToAssignmentDto(assignment.get());
         }
     }
+
 
     public String deleteAssignment(String id) {
         Optional<Assignment> deleteAssignment = assignmentRepository.findById(id);
@@ -79,6 +76,7 @@ public class AssignmentService {
             return "Assignment with title: " + id + " is deleted!";
         }
     }
+
 
     public AssignmentOutputDto overrideAssignment(String id, AssignmentInputDto assignmentInputDto) {
         Optional<Assignment> toOverrideAssignment = assignmentRepository.findById(id);
@@ -95,12 +93,11 @@ public class AssignmentService {
             updateAssignment.setDemands(assignmentInputDto.getDemands());
             updateAssignment.setReward(assignmentInputDto.getReward());
 
-
-
             assignmentRepository.save(updateAssignment);
             return transferToAssignmentDto(updateAssignment);
         }
     }
+
 
     public static void assignExecutorToAssignment(String id, String executorId) {
 
@@ -115,11 +112,13 @@ public class AssignmentService {
         } else {
             Assignment assignment = optionalAssignment.get();
             Executor executor = optionalExecutor.get();
+
             assignment.setExecutor(executor);
             assignment.setAssignmentStatus(ACCEPTED);
             assignmentRepository.save(assignment);
         }
     }
+
 
     public AssignmentOutputDto transferToAssignmentDto(Assignment assignment) {
         AssignmentOutputDto outputDto = new AssignmentOutputDto();
@@ -134,8 +133,4 @@ public class AssignmentService {
         outputDto.setExecutor(assignment.getExecutor());
         return outputDto;
     }
-
-
-
-
 }

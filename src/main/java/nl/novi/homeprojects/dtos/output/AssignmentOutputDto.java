@@ -15,9 +15,13 @@ public class AssignmentOutputDto {
 
     @NotBlank
     private String title;
+    @NotBlank
     private String description;
+    @NotBlank
     private String essentials;
+    @NotBlank
     private String demands;
+    @NotBlank
     private String reward;
     private AssignmentStatus assignmentStatus;
 

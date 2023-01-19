@@ -3,7 +3,6 @@ package nl.novi.homeprojects.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-
 import java.util.List;
 import javax.persistence.*;
 
@@ -42,8 +41,6 @@ public class Client {
     @OneToMany(mappedBy = "client")
     @JsonIgnoreProperties("assignments")
     private List <Assignment> assignments;
-
-
 
     @OneToOne(mappedBy = "client")
     @JsonIgnore

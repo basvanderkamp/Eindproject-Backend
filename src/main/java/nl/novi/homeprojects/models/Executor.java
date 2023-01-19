@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -22,12 +21,14 @@ public class Executor {
     @OneToMany(mappedBy = "executor")
     private List<Assignment> assignments;
 
+    public void deleteAssignment(Assignment assignment) {
+        this.assignments.remove(assignment);
+        assignment.setExecutor(null);
+    }
 
     @OneToOne(mappedBy = "executor")
     @JsonIgnore
     private Client client;
-
-
 }
 
 

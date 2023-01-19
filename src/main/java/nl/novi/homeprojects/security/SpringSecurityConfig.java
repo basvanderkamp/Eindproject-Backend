@@ -1,6 +1,5 @@
 package nl.novi.homeprojects.security;
 
-
 import nl.novi.homeprojects.services.CustomUserDetailsService;
 import nl.novi.homeprojects.filter.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SpringSecurityConfig {
 
-    /*inject customUserDetailService en jwtRequestFilter*/
     private CustomUserDetailsService customUserDetailsService;
     private JwtRequestFilter jwtRequestFilter;
 
@@ -28,6 +26,7 @@ public class SpringSecurityConfig {
         this.customUserDetailsService = customUserDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -37,6 +36,7 @@ public class SpringSecurityConfig {
                 .and()
                 .build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -51,6 +51,7 @@ public class SpringSecurityConfig {
                 .csrf().disable()
                 .httpBasic().disable().cors().and()
                 .authorizeRequests()
+
 
                 //----------------------------------------Endpoints User--------------------------------------
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
@@ -74,11 +75,13 @@ public class SpringSecurityConfig {
                 .antMatchers(HttpMethod.PUT,"/assignments/**").hasAnyRole("ADMIN","USER")
 
 
-                //----------------------------------------Endpoints Uploads--------------------------------------
-                /*voeg de antmatchers toe voor admin(post en delete) en user (overige)*/
+                //----------------------------------------Endpoint Executor--------------------------------------
+                .antMatchers(HttpMethod.PUT,"/executors/**").hasAnyRole("ADMIN","USER")
 
 
-
+                //----------------------------------------Endpoint Up/Download--------------------------------------
+                .antMatchers(HttpMethod.POST,"/upload").hasAnyRole("ADMIN","USER")
+                .antMatchers(HttpMethod.POST,"/download/**").hasAnyRole("ADMIN","USER")
 
 
                 .antMatchers("/authenticated").authenticated()
@@ -90,5 +93,4 @@ public class SpringSecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 }

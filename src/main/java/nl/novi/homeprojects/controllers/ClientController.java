@@ -11,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Objects;
@@ -21,7 +20,6 @@ import java.util.Objects;
 @RequestMapping("clients")
 public class ClientController {
 
-
     private final FileService fileService;
     private final ClientService clientService;
 
@@ -30,15 +28,18 @@ public class ClientController {
         this.fileService = fileService;
     }
 
+
     @GetMapping("")
     public ResponseEntity<Iterable<ClientOutputDto>> getClients() {
         return ResponseEntity.ok(clientService.getClients());
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<ClientOutputDto> getClientById(@PathVariable String id) {
         return ResponseEntity.ok(clientService.getOneClient(id));
     }
+
 
     @PostMapping("")
     public ResponseEntity<String> createClient(@Valid @RequestBody ClientInputDto clientInputDto, BindingResult br) {
@@ -55,23 +56,23 @@ public class ClientController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ClientOutputDto> overWriteClient(@PathVariable String id, @RequestBody ClientInputDto clientInputDto) {
-        return ResponseEntity.ok(clientService.overrideClient(id, clientInputDto));
-    }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteClientById(@PathVariable String id) {
         return ResponseEntity.ok(clientService.deleteClient(id));
     }
 
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ClientOutputDto> overWriteClient(@PathVariable String id, @RequestBody ClientInputDto clientInputDto) {
+        return ResponseEntity.ok(clientService.overrideClient(id, clientInputDto));
+    }
+
+
     @PutMapping("/{id}/assignments/{assignmentId}")
     public void assignAssignmentToClient(@PathVariable String id, @PathVariable String assignmentId) {
         ClientService.assignAssignmentToClient(id, assignmentId);
     }
-
-
 
 
     @PostMapping("/{id}/upload")
@@ -81,12 +82,5 @@ public class ClientController {
         String photo = fileService.storeFile(file, url);
 
         ClientService.assignFileToClient(photo, id);
-
     }
-
-
-
-
-
-
 }

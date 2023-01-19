@@ -3,14 +3,12 @@ package nl.novi.homeprojects.controllers;
 import nl.novi.homeprojects.dtos.input.AssignmentInputDto;
 import nl.novi.homeprojects.dtos.output.AssignmentOutputDto;
 import nl.novi.homeprojects.services.AssignmentService;
-import nl.novi.homeprojects.services.ClientService;
 import nl.novi.homeprojects.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -19,13 +17,10 @@ import java.net.URI;
 @RequestMapping("assignments")
 public class AssignmentController {
 
-
-
     private final AssignmentService assignmentService;
 
     public AssignmentController(AssignmentService assignmentService) {
         this.assignmentService = assignmentService;
-
     }
 
 
@@ -34,11 +29,11 @@ public class AssignmentController {
         return ResponseEntity.ok(assignmentService.getAssignments());
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<AssignmentOutputDto> getAssignmentById(@PathVariable String id) {
         return ResponseEntity.ok(assignmentService.getOneAssignment(id));
     }
-
 
 
     @PostMapping("")
@@ -57,6 +52,11 @@ public class AssignmentController {
     }
 
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAssignmentById(@PathVariable String id) {
+        return ResponseEntity.ok(assignmentService.deleteAssignment(id));
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<AssignmentOutputDto> overWriteAssignment(@PathVariable String id, @RequestBody AssignmentInputDto assignmentInputDto) {
@@ -64,17 +64,8 @@ public class AssignmentController {
     }
 
 
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAssignmentById(@PathVariable String id) {
-        return ResponseEntity.ok(assignmentService.deleteAssignment(id));
-    }
-
-
     @PutMapping("/{id}/executors/{executorId}")
     public void assignExecutorToAssignment(@PathVariable String id, @PathVariable String executorId) {
         AssignmentService.assignExecutorToAssignment(id, executorId);
     }
-
-
 }

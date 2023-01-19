@@ -1,13 +1,11 @@
 package nl.novi.homeprojects.models;
 
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +20,6 @@ public class File {
     private String fileName;
     private String contentType;
     private String url;
-
 
 
     public File(String fileName, String contentType, String url) {

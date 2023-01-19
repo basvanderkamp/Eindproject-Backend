@@ -29,7 +29,6 @@ public class FileService {
     private Path fileStoragePath;
     private final String fileStorageLocation;
 
-
     private FilesRepository filesRepository;
 
     public FileService(@Value("${my.upload_location}") String fileStorageLocation, FilesRepository filesRepository) {
@@ -47,11 +46,9 @@ public class FileService {
     }
 
 
-
     public String storeFile(MultipartFile file, String url) {
 
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-
         Path filePath = Paths.get(fileStoragePath + "\\" + fileName);
 
         try {
@@ -65,10 +62,10 @@ public class FileService {
         return fileName;
     }
 
+
     public Resource downLoadFile(String fileName) {
 
         Path path = Paths.get(fileStorageLocation).toAbsolutePath().resolve(fileName);
-
         Resource resource;
 
         try {
@@ -83,7 +80,6 @@ public class FileService {
             throw new RuntimeException("the file doesn't exist or is not readable");
         }
     }
-
 }
 
 

@@ -30,6 +30,7 @@ public class ClientInputDto {
     private String zipcode;
     @NotBlank
     private String email;
+    @NotBlank
     private String story;
 
     //Relations

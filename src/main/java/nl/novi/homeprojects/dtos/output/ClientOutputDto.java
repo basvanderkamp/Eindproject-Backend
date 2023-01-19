@@ -1,12 +1,8 @@
 package nl.novi.homeprojects.dtos.output;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import nl.novi.homeprojects.models.*;
-
-
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -30,11 +26,12 @@ public class ClientOutputDto {
     private String zipcode;
     @NotBlank
     private String email;
+    @NotBlank
     private String story;
+
 
     //Relations
     private List<Assignment> assignments;
-
     private User user;
     private Executor executor;
     private File file;

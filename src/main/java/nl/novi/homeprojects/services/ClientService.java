@@ -1,19 +1,13 @@
 package nl.novi.homeprojects.services;
 
-import nl.novi.homeprojects.dtos.input.AssignmentInputDto;
 import nl.novi.homeprojects.dtos.input.ClientInputDto;
-import nl.novi.homeprojects.dtos.output.AssignmentOutputDto;
 import nl.novi.homeprojects.dtos.output.ClientOutputDto;
 import nl.novi.homeprojects.exceptions.RecordNotFoundException;
 import nl.novi.homeprojects.models.*;
 import nl.novi.homeprojects.repositorys.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.ArrayList;
 import java.util.Optional;
-
-
 
 @Service
 public class ClientService {
@@ -33,26 +27,6 @@ public class ClientService {
         this.executorRepository = executorRepository;
     }
 
-
-
-    public ClientOutputDto transferToClientDto(Client client) {
-        ClientOutputDto outputDto = new ClientOutputDto();
-
-        outputDto.setUsername(client.getUsername());
-        outputDto.setFirstname(client.getFirstname());
-        outputDto.setLastname(client.getLastname());
-        outputDto.setMobile(client.getMobile());
-        outputDto.setAdres(client.getAdres());
-        outputDto.setPlace(client.getPlace());
-        outputDto.setZipcode(client.getZipcode());
-        outputDto.setEmail(client.getEmail());
-        outputDto.setStory(client.getStory());
-        outputDto.setAssignments(client.getAssignments());
-        outputDto.setUser(client.getUser());
-        outputDto.setFile(client.getFile());
-        outputDto.setExecutor(client.getExecutor());
-        return outputDto;
-    }
 
     public String createClient(ClientInputDto clientInputDto) {
         Client newClient = new Client();
@@ -76,9 +50,9 @@ public class ClientService {
         
         assignExecutorToClient(newClient.getUsername(), executor.getName());
 
-
         return savedClient.getUsername()+ savedExecutor.getName();
     }
+
 
     public Iterable<ClientOutputDto> getClients() {
         ArrayList<ClientOutputDto> clientsList = new ArrayList<>();
@@ -89,6 +63,7 @@ public class ClientService {
         }
         return clientsList;
     }
+
 
     public ClientOutputDto getOneClient(String id) {
         Optional<Client> client = clientRepository.findById(id);
@@ -101,6 +76,7 @@ public class ClientService {
         }
     }
 
+
     public String deleteClient(String id) {
         Optional<Client> deleteClient = clientRepository.findById(id);
 
@@ -112,13 +88,13 @@ public class ClientService {
         }
     }
 
+
     public ClientOutputDto overrideClient(String id, ClientInputDto clientInputDto) {
         Optional<Client> toOverrideClient = clientRepository.findById(id);
 
         if (toOverrideClient.isEmpty()) {
             throw new RecordNotFoundException("No client found with id: " + id);
         } else {
-
             Client updateClient = toOverrideClient.get();
 
             updateClient.setUsername(clientInputDto.getUsername());
@@ -135,11 +111,11 @@ public class ClientService {
             updateClient.setFile(clientInputDto.getFile());
             updateClient.setExecutor(clientInputDto.getExecutor());
 
-
             clientRepository.save(updateClient);
             return transferToClientDto(updateClient);
         }
     }
+
 
     public static void assignAssignmentToClient(String id, String assignmentId) {
 
@@ -158,6 +134,8 @@ public class ClientService {
             assignmentRepository.save(assignment);
         }
     }
+
+
     public static void assignExecutorToClient(String id, String executorId) {
 
         Optional<Client> optionalClient = clientRepository.findById(id);
@@ -186,17 +164,31 @@ public class ClientService {
             throw new RecordNotFoundException("Client with id: " + username + " not found");
         } else if (optionalFile.isEmpty()) {
             throw new RecordNotFoundException("File with id: " + fileName + " not found");
-
         } else {
             File file = optionalFile.get();
             Client client = optionalClient.get();
             file.setClient(client);
             filesRepository.save(file);
-
         }
     }
 
 
+    public ClientOutputDto transferToClientDto(Client client) {
+        ClientOutputDto outputDto = new ClientOutputDto();
 
-
+        outputDto.setUsername(client.getUsername());
+        outputDto.setFirstname(client.getFirstname());
+        outputDto.setLastname(client.getLastname());
+        outputDto.setMobile(client.getMobile());
+        outputDto.setAdres(client.getAdres());
+        outputDto.setPlace(client.getPlace());
+        outputDto.setZipcode(client.getZipcode());
+        outputDto.setEmail(client.getEmail());
+        outputDto.setStory(client.getStory());
+        outputDto.setAssignments(client.getAssignments());
+        outputDto.setUser(client.getUser());
+        outputDto.setFile(client.getFile());
+        outputDto.setExecutor(client.getExecutor());
+        return outputDto;
+    }
 }

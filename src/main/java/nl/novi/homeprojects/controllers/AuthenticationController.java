@@ -11,14 +11,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 
 @CrossOrigin(origins = "*")
 @RestController
 public class AuthenticationController {
 
-    /*inject authentionManager, userDetailService en jwtUtil*/
     private AuthenticationManager authenticateManager;
     private UserDetailsService userDetailsService;
     private JwtUtil jwtUtil;
@@ -29,10 +27,12 @@ public class AuthenticationController {
         this.jwtUtil = jwtUtil;
     }
 
+
     @GetMapping(value = "/authenticated")
     public ResponseEntity<Object> authenticated(Authentication authentication, Principal principal) {
         return ResponseEntity.ok().body(principal);
     }
+
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
@@ -49,12 +49,10 @@ public class AuthenticationController {
             throw new Exception("Incorrect username or password", ex);
         }
 
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(username);
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         final String jwt = jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
-
 }

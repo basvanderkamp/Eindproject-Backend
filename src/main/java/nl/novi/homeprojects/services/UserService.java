@@ -1,9 +1,7 @@
 package nl.novi.homeprojects.services;
 
-
 import nl.novi.homeprojects.dtos.input.UserInputDto;
 import nl.novi.homeprojects.dtos.output.UserOutputDto;
-import nl.novi.homeprojects.exceptions.RecordNotFoundException;
 import nl.novi.homeprojects.exceptions.UsernameNotFoundException;
 import nl.novi.homeprojects.models.Authority;
 import nl.novi.homeprojects.models.Client;
@@ -14,12 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import static nl.novi.homeprojects.services.AssignmentService.clientRepository;
 
 
@@ -29,9 +25,7 @@ public class UserService {
     @Autowired
     @Lazy
     private PasswordEncoder passwordEncoder;
-
     private static UserRepository userRepository;
-
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -45,6 +39,7 @@ public class UserService {
         return collection;
     }
 
+
     public UserOutputDto getUser(String username) {
         UserOutputDto dto = new UserOutputDto();
         Optional<User> user = userRepository.findById(username);
@@ -56,22 +51,25 @@ public class UserService {
         return dto;
     }
 
+
     public boolean userExists(String username) {
         return userRepository.existsById(username);
     }
+
 
     public String createUser(UserInputDto userInputDto) {
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
         userInputDto.setPassword(passwordEncoder.encode(userInputDto.getPassword()));
         userInputDto.setApikey(randomString);
+
         User newUser = userRepository.save(toUser(userInputDto));
         return newUser.getUsername();
-
     }
 
     public void deleteUser(String username) {
         userRepository.deleteById(username);
     }
+
 
     public void updateUser(String username, UserOutputDto newUser) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
@@ -80,12 +78,14 @@ public class UserService {
         userRepository.save(user);
     }
 
+
     public Set<Authority> getAuthorities(String username) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
         User user = userRepository.findById(username).get();
         UserOutputDto userDto = fromUser(user);
         return userDto.getAuthorities();
     }
+
 
     public void addAuthority(String username, String authority) {
 
@@ -94,6 +94,7 @@ public class UserService {
         user.addAuthority(new Authority(username, authority));
         userRepository.save(user);
     }
+
 
     public void removeAuthority(String username, String authority) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
@@ -119,6 +120,7 @@ public class UserService {
         }
     }
 
+
     public static UserOutputDto fromUser(User user){
 
         var dto = new UserOutputDto();
@@ -132,10 +134,9 @@ public class UserService {
             dto.setClient(user.getClient());
         }
 
-
-
         return dto;
     }
+
 
     public User toUser(UserInputDto userInputDto) {
 
@@ -149,10 +150,6 @@ public class UserService {
             user.setClient(userInputDto.getClient());
         }
 
-
         return user;
     }
-
-
-
 }

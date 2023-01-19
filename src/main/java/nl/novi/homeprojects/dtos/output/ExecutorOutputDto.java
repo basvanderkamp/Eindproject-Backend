@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import nl.novi.homeprojects.models.Assignment;
 import nl.novi.homeprojects.models.Client;
-
 import java.util.List;
 
 @Getter
