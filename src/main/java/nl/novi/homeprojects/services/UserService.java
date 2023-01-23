@@ -2,6 +2,7 @@ package nl.novi.homeprojects.services;
 
 import nl.novi.homeprojects.dtos.input.UserInputDto;
 import nl.novi.homeprojects.dtos.output.UserOutputDto;
+import nl.novi.homeprojects.exceptions.BadRequestException;
 import nl.novi.homeprojects.exceptions.UsernameNotFoundException;
 import nl.novi.homeprojects.models.Authority;
 import nl.novi.homeprojects.models.Client;
@@ -10,6 +11,8 @@ import nl.novi.homeprojects.repositorys.UserRepository;
 import nl.novi.homeprojects.utils.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -58,12 +61,16 @@ public class UserService {
 
 
     public String createUser(UserInputDto userInputDto) {
-        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
-        userInputDto.setPassword(passwordEncoder.encode(userInputDto.getPassword()));
-        userInputDto.setApikey(randomString);
 
-        User newUser = userRepository.save(toUser(userInputDto));
-        return newUser.getUsername();
+        if (userExists(userInputDto.getUsername())){
+            throw new BadRequestException("Username already exists");
+        } else {
+            String randomString = RandomStringGenerator.generateAlphaNumeric(20);
+            userInputDto.setPassword(passwordEncoder.encode(userInputDto.getPassword()));
+            userInputDto.setApikey(randomString);
+            User saveUser = userRepository.save(toUser(userInputDto));
+            return saveUser.getUsername();
+        }
     }
 
     public void deleteUser(String username) {

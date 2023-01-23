@@ -78,23 +78,30 @@ public class AssignmentService {
     }
 
 
-    public AssignmentOutputDto overrideAssignment(String id, AssignmentInputDto assignmentInputDto) {
-        Optional<Assignment> toOverrideAssignment = assignmentRepository.findById(id);
+    public AssignmentOutputDto patchAssignment(String id, AssignmentInputDto assignmentInputDto) {
+        Optional<Assignment> optionalAssignment = assignmentRepository.findById(id);
 
-        if (toOverrideAssignment.isEmpty()) {
-            throw new RecordNotFoundException("No assignment found with title: " + id);
+        if (optionalAssignment.isPresent()) {
+            Assignment assignmentUpdate = optionalAssignment.get();
+
+
+            if (assignmentInputDto.getDescription() != null) {
+                assignmentUpdate.setDescription(assignmentInputDto.getDescription());
+            }
+            if (assignmentInputDto.getEssentials() != null) {
+                assignmentUpdate.setEssentials(assignmentInputDto.getEssentials());
+            }
+            if (assignmentInputDto.getDemands() != null) {
+                assignmentUpdate.setDemands(assignmentInputDto.getDemands());
+            }
+            if (assignmentInputDto.getReward() != null) {
+                assignmentUpdate.setReward(assignmentInputDto.getReward());
+            }
+
+            Assignment updatedAssignment = assignmentRepository.save(assignmentUpdate);
+            return transferToAssignmentDto(updatedAssignment);
         } else {
-
-            Assignment updateAssignment = toOverrideAssignment.get();
-
-            updateAssignment.setTitle(assignmentInputDto.getTitle());
-            updateAssignment.setDescription(assignmentInputDto.getDescription());
-            updateAssignment.setEssentials(assignmentInputDto.getEssentials());
-            updateAssignment.setDemands(assignmentInputDto.getDemands());
-            updateAssignment.setReward(assignmentInputDto.getReward());
-
-            assignmentRepository.save(updateAssignment);
-            return transferToAssignmentDto(updateAssignment);
+            throw new RecordNotFoundException("No assignment found with title: " + id);
         }
     }
 

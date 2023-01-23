@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import nl.novi.homeprojects.models.Assignment;
 import nl.novi.homeprojects.models.Executor;
-import nl.novi.homeprojects.models.File;
+import nl.novi.homeprojects.models.FileDocument;
 import nl.novi.homeprojects.models.User;
 
 import javax.validation.constraints.NotBlank;
@@ -38,5 +38,5 @@ public class ClientInputDto {
     private List<Assignment> assignments;
     private Executor executor;
 
-    private File file;
+    private FileDocument fileDocument;
 }

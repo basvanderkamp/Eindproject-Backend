@@ -2,8 +2,9 @@ package nl.novi.homeprojects.controllers;
 
 import nl.novi.homeprojects.dtos.input.ClientInputDto;
 import nl.novi.homeprojects.dtos.output.ClientOutputDto;
+import nl.novi.homeprojects.models.FileDocument;
 import nl.novi.homeprojects.services.ClientService;
-import nl.novi.homeprojects.services.FileService;
+import nl.novi.homeprojects.services.DatabaseService;
 import nl.novi.homeprojects.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,20 +13,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
-import java.util.Objects;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("clients")
 public class ClientController {
 
-    private final FileService fileService;
+    private final DatabaseService databaseService;
     private final ClientService clientService;
 
-    public ClientController (ClientService clientService, FileService fileService) {
+    public ClientController (ClientService clientService, DatabaseService databaseService) {
         this.clientService = clientService;
-        this.fileService = fileService;
+        this.databaseService = databaseService;
     }
 
 
@@ -76,11 +77,11 @@ public class ClientController {
 
 
     @PostMapping("/{id}/upload")
-    public void assignPhotoToClient(@PathVariable String id, @RequestBody MultipartFile file) {
+    public void assignPhotoToClient(@PathVariable String id, @RequestBody MultipartFile file) throws IOException {
 
-        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/download/").path(Objects.requireNonNull(file.getOriginalFilename())).toUriString();
-        String photo = fileService.storeFile(file, url);
+        //String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/download/").path(Objects.requireNonNull(file.getOriginalFilename())).toUriString();
+        FileDocument fileDocument = databaseService.uploadFileDocument(file);
 
-        ClientService.assignFileToClient(photo, id);
+        ClientService.assignFileToClient(fileDocument.getFileName(), id);
     }
 }

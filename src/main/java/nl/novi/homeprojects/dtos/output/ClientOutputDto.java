@@ -34,5 +34,5 @@ public class ClientOutputDto {
     private List<Assignment> assignments;
     private User user;
     private Executor executor;
-    private File file;
+    private FileDocument fileDocument;
 }

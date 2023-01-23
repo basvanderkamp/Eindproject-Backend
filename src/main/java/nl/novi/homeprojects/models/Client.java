@@ -48,7 +48,7 @@ public class Client {
 
     @OneToOne(mappedBy = "client")
     @JsonIgnoreProperties(value = "client")
-    private File file;
+    private FileDocument fileDocument;
 
     @OneToOne
     private Executor executor;

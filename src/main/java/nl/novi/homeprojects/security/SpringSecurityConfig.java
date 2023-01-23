@@ -72,6 +72,7 @@ public class SpringSecurityConfig {
                 .antMatchers(HttpMethod.POST,"/assignments").hasAnyRole("ADMIN","USER")
                 .antMatchers(HttpMethod.GET,"/assignments").hasAnyRole("ADMIN","USER")
                 .antMatchers(HttpMethod.DELETE,"/assignments/**").hasAnyRole("ADMIN","USER")
+                .antMatchers(HttpMethod.PATCH,"/assignments/**").hasAnyRole("ADMIN","USER")
                 .antMatchers(HttpMethod.PUT,"/assignments/**").hasAnyRole("ADMIN","USER")
 
 
@@ -80,7 +81,7 @@ public class SpringSecurityConfig {
 
 
                 //----------------------------------------Endpoint Up/Download--------------------------------------
-                .antMatchers(HttpMethod.POST,"/upload").hasAnyRole("ADMIN","USER")
+                .antMatchers(HttpMethod.POST,"/single/upload").hasAnyRole("ADMIN","USER")
                 .antMatchers(HttpMethod.POST,"/download/**").hasAnyRole("ADMIN","USER")
 
 

@@ -58,9 +58,9 @@ public class AssignmentController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AssignmentOutputDto> overWriteAssignment(@PathVariable String id, @RequestBody AssignmentInputDto assignmentInputDto) {
-        return ResponseEntity.ok(assignmentService.overrideAssignment(id, assignmentInputDto));
+    @PatchMapping("/{id}")
+    public ResponseEntity<AssignmentOutputDto> changeAssingmentById(@PathVariable String id, @RequestBody AssignmentInputDto assignmentInputDto) {
+        return ResponseEntity.ok(assignmentService.patchAssignment(id, assignmentInputDto));
     }
 
 

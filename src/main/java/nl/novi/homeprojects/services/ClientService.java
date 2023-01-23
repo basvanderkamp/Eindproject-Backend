@@ -6,6 +6,8 @@ import nl.novi.homeprojects.exceptions.RecordNotFoundException;
 import nl.novi.homeprojects.models.*;
 import nl.novi.homeprojects.repositorys.*;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -15,16 +17,15 @@ public class ClientService {
     public static ClientRepository clientRepository;
     public static AssignmentRepository assignmentRepository;
     public static UserRepository userRepository;
-    public static FilesRepository filesRepository;
+    public static DocFileRepository docFileRepository;
     private static ExecutorRepository executorRepository;
 
-    public ClientService (ClientRepository clientRepository, AssignmentRepository assignmentRepository, UserRepository userRepository, FilesRepository filesRepository,
-                          ExecutorRepository executorRepository) {
+    public ClientService (ClientRepository clientRepository, AssignmentRepository assignmentRepository, UserRepository userRepository, ExecutorRepository executorRepository, DocFileRepository docFileRepository) {
         this.clientRepository = clientRepository;
         this.assignmentRepository = assignmentRepository;
         this.userRepository = userRepository;
-        this.filesRepository = filesRepository;
         this.executorRepository = executorRepository;
+        this.docFileRepository = docFileRepository;
     }
 
 
@@ -108,7 +109,7 @@ public class ClientService {
             updateClient.setStory(clientInputDto.getStory());
             updateClient.setAssignments(clientInputDto.getAssignments());
             updateClient.setUser(clientInputDto.getUser());
-            updateClient.setFile(clientInputDto.getFile());
+            updateClient.setFileDocument(clientInputDto.getFileDocument());
             updateClient.setExecutor(clientInputDto.getExecutor());
 
             clientRepository.save(updateClient);
@@ -158,17 +159,17 @@ public class ClientService {
     public static void assignFileToClient(String fileName, String username) {
 
         Optional<Client> optionalClient = clientRepository.findById(username);
-        Optional<File> optionalFile = filesRepository.findById(fileName);
+        Optional<FileDocument> optionalFile = Optional.ofNullable(docFileRepository.findByFileName(fileName));
 
         if (optionalClient.isEmpty()) {
             throw new RecordNotFoundException("Client with id: " + username + " not found");
         } else if (optionalFile.isEmpty()) {
             throw new RecordNotFoundException("File with id: " + fileName + " not found");
         } else {
-            File file = optionalFile.get();
+            FileDocument file = optionalFile.get();
             Client client = optionalClient.get();
             file.setClient(client);
-            filesRepository.save(file);
+            docFileRepository.save(file);
         }
     }
 
@@ -187,7 +188,7 @@ public class ClientService {
         outputDto.setStory(client.getStory());
         outputDto.setAssignments(client.getAssignments());
         outputDto.setUser(client.getUser());
-        outputDto.setFile(client.getFile());
+        outputDto.setFileDocument(client.getFileDocument());
         outputDto.setExecutor(client.getExecutor());
         return outputDto;
     }
