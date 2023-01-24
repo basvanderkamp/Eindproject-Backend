@@ -46,12 +46,6 @@ public class ExecutorService {
     }
 
 
-    public ExecutorOutputDto transferToExecutorDto(Executor executor) {
-        ExecutorOutputDto outputDto = new ExecutorOutputDto();
 
-        outputDto.setName(executor.getName());
-        outputDto.setAssignments(executor.getAssignments());
-        return outputDto;
-    }
 }
 

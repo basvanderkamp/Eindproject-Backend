@@ -59,7 +59,7 @@ public class AssignmentController {
 
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AssignmentOutputDto> changeAssingmentById(@PathVariable String id, @RequestBody AssignmentInputDto assignmentInputDto) {
+    public ResponseEntity<AssignmentOutputDto> changeAssignmentById(@PathVariable String id, @RequestBody AssignmentInputDto assignmentInputDto) {
         return ResponseEntity.ok(assignmentService.patchAssignment(id, assignmentInputDto));
     }
 

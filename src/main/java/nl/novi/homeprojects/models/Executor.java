@@ -18,6 +18,10 @@ public class Executor {
     @Id
     private String name;
 
+    public Executor(String name) {
+        this.name = name;
+    }
+
     @OneToMany(mappedBy = "executor")
     private List<Assignment> assignments;
 

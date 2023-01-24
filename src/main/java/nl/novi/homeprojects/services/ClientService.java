@@ -7,7 +7,7 @@ import nl.novi.homeprojects.models.*;
 import nl.novi.homeprojects.repositorys.*;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -42,8 +42,6 @@ public class ClientService {
         newClient.setZipcode(clientInputDto.getZipcode());
         newClient.setEmail(clientInputDto.getEmail());
         newClient.setStory(clientInputDto.getStory());
-        newClient.setAssignments(clientInputDto.getAssignments());
-        newClient.setExecutor(clientInputDto.getExecutor());
         Client savedClient = clientRepository.save(newClient);
 
         executor.setName(clientInputDto.getUsername());
@@ -51,7 +49,7 @@ public class ClientService {
         
         assignExecutorToClient(newClient.getUsername(), executor.getName());
 
-        return savedClient.getUsername()+ savedExecutor.getName();
+        return savedClient.getUsername() + savedExecutor.getName();
     }
 
 
@@ -90,30 +88,41 @@ public class ClientService {
     }
 
 
-    public ClientOutputDto overrideClient(String id, ClientInputDto clientInputDto) {
-        Optional<Client> toOverrideClient = clientRepository.findById(id);
+    public ClientOutputDto patchClient(String id, ClientInputDto clientInputDto) {
+        Optional<Client> optionalClient = clientRepository.findById(id);
 
-        if (toOverrideClient.isEmpty()) {
-            throw new RecordNotFoundException("No client found with id: " + id);
+        if (optionalClient.isPresent()) {
+            Client clientUpdate = optionalClient.get();
+
+            if (clientInputDto.getFirstname() != null) {
+                clientUpdate.setFirstname(clientInputDto.getFirstname());
+            }
+            if (clientInputDto.getLastname() != null) {
+                clientUpdate.setLastname(clientInputDto.getLastname());
+            }
+            if (clientInputDto.getMobile() != null) {
+                clientUpdate.setMobile(clientInputDto.getMobile());
+            }
+            if (clientInputDto.getAdres() != null) {
+                clientUpdate.setAdres(clientInputDto.getAdres());
+            }
+            if (clientInputDto.getPlace() != null) {
+                clientUpdate.setPlace(clientInputDto.getPlace());
+            }
+            if (clientInputDto.getZipcode() != null) {
+                clientUpdate.setZipcode(clientInputDto.getZipcode());
+            }
+            if (clientInputDto.getEmail() != null) {
+                clientUpdate.setEmail(clientInputDto.getEmail());
+            }
+            if (clientInputDto.getStory() != null) {
+                clientUpdate.setStory(clientInputDto.getStory());
+            }
+
+            Client updatedClient = clientRepository.save(clientUpdate);
+            return transferToClientDto(updatedClient);
         } else {
-            Client updateClient = toOverrideClient.get();
-
-            updateClient.setUsername(clientInputDto.getUsername());
-            updateClient.setFirstname(clientInputDto.getFirstname());
-            updateClient.setLastname(clientInputDto.getLastname());
-            updateClient.setMobile(clientInputDto.getMobile());
-            updateClient.setAdres(clientInputDto.getAdres());
-            updateClient.setPlace(clientInputDto.getPlace());
-            updateClient.setZipcode(clientInputDto.getZipcode());
-            updateClient.setEmail(clientInputDto.getEmail());
-            updateClient.setStory(clientInputDto.getStory());
-            updateClient.setAssignments(clientInputDto.getAssignments());
-            updateClient.setUser(clientInputDto.getUser());
-            updateClient.setFileDocument(clientInputDto.getFileDocument());
-            updateClient.setExecutor(clientInputDto.getExecutor());
-
-            clientRepository.save(updateClient);
-            return transferToClientDto(updateClient);
+            throw new RecordNotFoundException("No client found with id: " + id);
         }
     }
 

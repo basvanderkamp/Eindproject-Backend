@@ -64,9 +64,9 @@ public class ClientController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ClientOutputDto> overWriteClient(@PathVariable String id, @RequestBody ClientInputDto clientInputDto) {
-        return ResponseEntity.ok(clientService.overrideClient(id, clientInputDto));
+    @PatchMapping("/{id}")
+    public ResponseEntity<ClientOutputDto> changeClientByID(@PathVariable String id, @RequestBody ClientInputDto clientInputDto) {
+        return ResponseEntity.ok(clientService.patchClient(id, clientInputDto));
     }
 
 

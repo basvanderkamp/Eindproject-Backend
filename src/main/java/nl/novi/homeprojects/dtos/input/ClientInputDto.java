@@ -33,6 +33,21 @@ public class ClientInputDto {
     @NotBlank
     private String story;
 
+    public ClientInputDto() {
+    }
+
+    public ClientInputDto(String username, String firstname, String lastname, String mobile, String adres, String place, String zipcode, String email, String story) {
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.mobile = mobile;
+        this.adres = adres;
+        this.place = place;
+        this.zipcode = zipcode;
+        this.email = email;
+        this.story = story;
+    }
+
     //Relations
     private User user;
     private List<Assignment> assignments;

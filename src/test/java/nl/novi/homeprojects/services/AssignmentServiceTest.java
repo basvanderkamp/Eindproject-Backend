@@ -7,10 +7,7 @@ import nl.novi.homeprojects.models.AssignmentStatus;
 import nl.novi.homeprojects.models.Client;
 import nl.novi.homeprojects.models.Executor;
 import nl.novi.homeprojects.repositorys.AssignmentRepository;
-import nl.novi.homeprojects.repositorys.ClientRepository;
 import nl.novi.homeprojects.repositorys.ExecutorRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,7 +23,6 @@ import static nl.novi.homeprojects.models.AssignmentStatus.ACCEPTED;
 import static nl.novi.homeprojects.models.AssignmentStatus.AVAILABLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,18 +33,9 @@ class AssignmentServiceTest {
     AssignmentRepository assignmentRepository;
     @Mock
     private ExecutorRepository executorRepository;
-    @Mock
-    ClientRepository clientRepository;
+
     @InjectMocks
     AssignmentService assignmentService;
-
-//    @BeforeEach
-//    void setUp() {
-//    }
-//
-//    @AfterEach
-//    void tearDown() {
-//    }
 
     @Test
     void testCreateAssignment() {
@@ -141,39 +128,87 @@ class AssignmentServiceTest {
     }
 
     @Test
-    void shouldGetOneCorrectAssignment() {
-        //Arrange
+    void testGetOneAssignment() {
+        // Arrange
+        Assignment assignment = new Assignment();
+        Client client = new Client();
+        assignment.setTitle("Test Title");
+        assignment.setDescription("Test Description");
+        assignment.setEssentials("Test Essentials");
+        assignment.setDemands("Test Demands");
+        assignment.setReward("Test Geld");
+        assignment.setClient(client);
+        assignment.setAssignmentStatus(AVAILABLE);
 
+        when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment));
 
-        //Act
+        // Act
+        AssignmentOutputDto assignmentOutputDto = assignmentService.getOneAssignment("testId");
 
-
-        //Assert
+        // Assert
+        assertEquals("Test Title", assignmentOutputDto.getTitle());
+        assertEquals("Test Description", assignmentOutputDto.getDescription());
+        assertEquals("Test Essentials", assignmentOutputDto.getEssentials());
+        assertEquals("Test Demands", assignmentOutputDto.getDemands());
+        assertEquals("Test Geld", assignmentOutputDto.getReward());
+        assertEquals(client, assignmentOutputDto.getClient());
+        assertEquals(AVAILABLE, assignmentOutputDto.getAssignmentStatus());
     }
 
     @Test
-    void shouldDeleteOneAssignment() {
-        //Arrange
+    void testDeleteAssignment() {
+        // Arrange
+        Assignment assignment = new Assignment();
+        Client client = new Client();
+        assignment.setTitle("Test Title");
+        assignment.setDescription("Test Description");
+        assignment.setEssentials("Test Essentials");
+        assignment.setDemands("Test Demands");
+        assignment.setReward("Test Geld");
+        assignment.setClient(client);
+        assignment.setAssignmentStatus(AVAILABLE);
 
+        when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment));
 
-        //Act
+        // Act
+        String result = assignmentService.deleteAssignment("testId");
 
-
-        //Assert
+        // Assert
+        assertEquals("Assignment with title: testId is deleted!", result);
     }
 
     @Test
-    void shouldOverrideOneAssignment() {
-        //Arrange
+    void testPatchAssignment() {
+        // Arrange
+        Assignment assignment = new Assignment();
+        assignment.setTitle("Test Title");
+        assignment.setDescription("Test Description");
+        assignment.setEssentials("Test Essentials");
+        assignment.setDemands("Test Demands");
+        assignment.setReward("Test Geld");
+        assignment.setAssignmentStatus(AVAILABLE);
 
+        when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment));
+        when(assignmentRepository.save(any(Assignment.class))).thenReturn(assignment);
 
-        //Act
+        AssignmentInputDto inputDto = new AssignmentInputDto();
+        inputDto.setDescription("Test Description Updated");
+        inputDto.setEssentials("Test Essentials Updated");
+        inputDto.setReward("Test Geld Updated");
 
+        // Act
+        AssignmentOutputDto outputDto = assignmentService.patchAssignment("testId", inputDto);
 
-        //Assert
+        // Assert
+        assertEquals("Test Title", outputDto.getTitle());
+        assertEquals("Test Description Updated", outputDto.getDescription());
+        assertEquals("Test Essentials Updated", outputDto.getEssentials());
+        assertEquals("Test Demands", outputDto.getDemands());
+        assertEquals("Test Geld Updated", outputDto.getReward());
+        assertEquals(AVAILABLE, outputDto.getAssignmentStatus());
     }
 
-    @Test
+        @Test
     void testTransferToAssignmentDto() {
         // Arrange
         Client client = new Client();

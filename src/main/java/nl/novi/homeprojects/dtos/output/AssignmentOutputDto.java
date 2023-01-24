@@ -1,6 +1,8 @@
 package nl.novi.homeprojects.dtos.output;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.novi.homeprojects.models.AssignmentStatus;
 import nl.novi.homeprojects.models.Client;
@@ -10,6 +12,8 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class AssignmentOutputDto {
@@ -27,6 +31,14 @@ public class AssignmentOutputDto {
     private AssignmentStatus assignmentStatus;
 
 
+    public AssignmentOutputDto(String title, String description, String essentials, String demands, String reward, AssignmentStatus assignmentStatus) {
+        this.title = title;
+        this.description = description;
+        this.essentials = essentials;
+        this.demands = demands;
+        this.reward = reward;
+        this.assignmentStatus = assignmentStatus;
+    }
 
     //Relations
     private Client client;
