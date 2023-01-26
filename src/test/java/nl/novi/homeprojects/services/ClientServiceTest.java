@@ -38,13 +38,7 @@ class ClientServiceTest {
     @InjectMocks
     ClientService clientService;
 
-//    @BeforeEach
-//    void setUp() {
-//    }
-//
-//    @AfterEach
-//    void tearDown() {
-//    }
+
 
     @Test
     void testCreateClient() {
@@ -88,7 +82,7 @@ class ClientServiceTest {
     }
 
     @Test
-    void testGetAssignments() {
+    void testGetClients() {
         // Arrange
         Client client1 = new Client();
         Executor executor = new Executor();
@@ -168,7 +162,7 @@ class ClientServiceTest {
     }
 
     @Test
-    void testGetOneAssignment() {
+    void testGetOneClient() {
         // Arrange
         Client client1 = new Client();
         Executor executor = new Executor();
@@ -210,7 +204,7 @@ class ClientServiceTest {
     }
 
     @Test
-    void testDeleteAssignment() {
+    void testDeleteClient() {
         // Arrange
         Client client1 = new Client();
         Executor executor = new Executor();

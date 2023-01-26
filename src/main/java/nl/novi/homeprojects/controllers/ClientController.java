@@ -79,7 +79,6 @@ public class ClientController {
     @PostMapping("/{id}/upload")
     public void assignPhotoToClient(@PathVariable String id, @RequestBody MultipartFile file) throws IOException {
 
-        //String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/download/").path(Objects.requireNonNull(file.getOriginalFilename())).toUriString();
         FileDocument fileDocument = databaseService.uploadFileDocument(file);
 
         ClientService.assignFileToClient(fileDocument.getFileName(), id);

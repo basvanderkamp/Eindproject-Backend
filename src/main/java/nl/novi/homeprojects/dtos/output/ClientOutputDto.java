@@ -52,6 +52,7 @@ public class ClientOutputDto {
     private Executor executor;
     private FileDocument fileDocument;
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -77,7 +77,7 @@ public class SpringSecurityConfig {
 
 
                 //----------------------------------------Endpoint Executor--------------------------------------
-                .antMatchers(HttpMethod.PUT,"/executors/**").hasAnyRole("ADMIN","USER")
+                .antMatchers(HttpMethod.PUT,"/executors/**").hasAnyRole("ADMIN","EXECUTOR")
 
 
                 //----------------------------------------Endpoint Up/Download--------------------------------------

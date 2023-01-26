@@ -11,6 +11,7 @@ INSERT INTO clients (username, firstname, lastname, mobile, adres, place, zipcod
 INSERT INTO executor (name) VALUES ('sebastiaan');
 INSERT INTO users (username, password, enabled, apikey, client_username) VALUES ('sebastiaan', '$2a$12$Q63ccJHHpacqykAdV1eJt.MBETxQszGC6czyMAICKgAXPcT9SAM6S', true, '7847493', 'sebastiaan');
 INSERT INTO authorities (username, authority) VALUES ('sebastiaan', 'ROLE_USER');
+INSERT INTO authorities (username, authority) VALUES ('sebastiaan', 'ROLE_EXECUTOR');
 UPDATE clients SET executor_name = 'sebastiaan' WHERE username = 'sebastiaan';
 UPDATE Assignments SET client_username = 'sebastiaan' WHERE title = 'Autowassen';
 UPDATE Assignments SET client_username = 'sebastiaan' WHERE title = 'Schilderen';
@@ -21,6 +22,7 @@ INSERT INTO clients (username, firstname, lastname, mobile, adres, place, zipcod
 INSERT INTO executor (name) VALUES ('jeremy');
 INSERT INTO users (username, password, enabled, apikey, client_username) VALUES ('jeremy', '$2a$12$Q63ccJHHpacqykAdV1eJt.MBETxQszGC6czyMAICKgAXPcT9SAM6S', true, '7847493', 'jeremy');
 INSERT INTO authorities (username, authority) VALUES ('jeremy', 'ROLE_USER');
+INSERT INTO authorities (username, authority) VALUES ('jeremy', 'ROLE_EXECUTOR');
 UPDATE clients SET executor_name = 'jeremy' WHERE username = 'jeremy';
 UPDATE Assignments SET client_username = 'jeremy' WHERE title = 'Boodschappen doen';
 UPDATE Assignments SET client_username = 'jeremy' WHERE title = 'Stofzuigen';
@@ -30,4 +32,5 @@ INSERT INTO clients (username, firstname, lastname, mobile, adres, place, zipcod
 INSERT INTO executor (name) VALUES ('admin');
 INSERT INTO users (username, password, enabled, apikey, client_username) VALUES ('admin', '$2a$12$Iszwf.MkqE87SR71Tvm6qONL4pgC/DC2QW58Irujhpy8KOIoA7PsC', true, '7847493', 'admin');
 INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN');
+INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_EXECUTOR');
 UPDATE clients SET executor_name = 'admin' WHERE username = 'admin';

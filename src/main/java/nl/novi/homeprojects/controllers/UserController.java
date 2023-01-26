@@ -45,6 +45,7 @@ public class UserController {
 
         String newUsername = userService.createUser(inputDto);
         userService.addAuthority(newUsername, "ROLE_USER");
+        userService.addAuthority(newUsername, "ROLE_EXECUTOR");
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}")
                 .buildAndExpand(newUsername).toUri();
