@@ -19,8 +19,13 @@ public class ExecutorController {
     }
 
 
-    @PutMapping("/{id}/assignments/{assignmentId}")
+    @PutMapping("/{id}/finishAssignments/{assignmentId}")
     public void finishAssignment(@PathVariable String id, @PathVariable String assignmentId) {
         ExecutorService.finishAssignment(id, assignmentId);
+    }
+
+    @PutMapping("/{id}/cancelAssignments/{assignmentId}")
+    public void cancelAssignment(@PathVariable String id, @PathVariable String assignmentId) {
+        ExecutorService.cancelAssignment(id, assignmentId);
     }
 }

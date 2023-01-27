@@ -53,7 +53,4 @@ public class Client {
     @OneToOne
     private Executor executor;
 
-
-
-
 }

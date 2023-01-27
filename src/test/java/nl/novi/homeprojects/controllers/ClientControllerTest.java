@@ -85,6 +85,7 @@ class ClientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].username").value("Username 1"))
                 .andExpect(jsonPath("$[1].username").value("Username 2"))
+                .andExpect(jsonPath("$[2].username").value("Username 3"))
         ;
         verify(clientService).getClients();
     }

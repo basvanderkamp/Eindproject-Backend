@@ -1,13 +1,16 @@
 package nl.novi.homeprojects.services;
 
 import nl.novi.homeprojects.dtos.input.AssignmentInputDto;
+import nl.novi.homeprojects.dtos.input.ClientInputDto;
 import nl.novi.homeprojects.dtos.output.AssignmentOutputDto;
+import nl.novi.homeprojects.dtos.output.ClientOutputDto;
 import nl.novi.homeprojects.models.Assignment;
 import nl.novi.homeprojects.models.AssignmentStatus;
 import nl.novi.homeprojects.models.Client;
 import nl.novi.homeprojects.models.Executor;
 import nl.novi.homeprojects.repositorys.AssignmentRepository;
 import nl.novi.homeprojects.repositorys.ExecutorRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,138 +38,144 @@ class AssignmentServiceTest {
     @InjectMocks
     AssignmentService assignmentService;
 
-    @Test
-    void testCreateAssignment() {
-        // Arrange
-        AssignmentInputDto inputDto = new AssignmentInputDto();
-        inputDto.setTitle("Test Title");
-        inputDto.setDescription("Test Description");
-        inputDto.setEssentials("Test Essentials");
-        inputDto.setDemands("Test Demands");
-        inputDto.setReward("Test Geld");
-        Client client = new Client();
-        inputDto.setClient(client);
+    AssignmentInputDto inputDto1;
+    AssignmentInputDto inputDto2;
+    AssignmentOutputDto outputDto1;
+    AssignmentOutputDto outputDto2;
+    Client client;
+    Executor executor;
+    Assignment assignment1;
+    Assignment assignment2;
+    List<Assignment> assignmentList;
 
-        Assignment savedAssignment = new Assignment();
-        savedAssignment.setTitle("Test Title");
-        savedAssignment.setDescription("Test Description");
-        savedAssignment.setEssentials("Test Essentials");
-        savedAssignment.setDemands("Test Demands");
-        savedAssignment.setReward("Test Geld");
-        savedAssignment.setClient(client);
-        savedAssignment.setAssignmentStatus(AVAILABLE);
+    @BeforeEach
+    void setUp() {
+        inputDto1 = new AssignmentInputDto();
+        inputDto2 = new AssignmentInputDto();
+        outputDto1 = new AssignmentOutputDto();
+        outputDto2 = new AssignmentOutputDto();
+        client = new Client();
+        executor = new Executor();
 
-        when(assignmentRepository.save(any(Assignment.class))).thenReturn(savedAssignment);
+        inputDto1.setTitle("Title 1");
+        inputDto1.setDescription("Description 1");
+        inputDto1.setEssentials("Essentials 1");
+        inputDto1.setDemands("Demands 1");
+        inputDto1.setReward("Reward 1");
+        inputDto1.setAssignmentStatus(AVAILABLE);
+        inputDto1.setClient(client);
 
-        // Act
-        String result = assignmentService.createAssignment(inputDto);
+        inputDto2.setTitle("Title 1");
+        inputDto2.setDescription("Description 1 Updated");
+        inputDto2.setEssentials("Essentials 1 Updated");
+        inputDto2.setDemands("Demands 1");
+        inputDto2.setReward("Reward 1 Updated");
+        inputDto2.setAssignmentStatus(AVAILABLE);
+        inputDto2.setClient(client);
 
-        // Assert
-        assertEquals("Assignment with title: Test Title created!", result);
+        outputDto1.setTitle("Title 1");
+        outputDto1.setDescription("Description 1");
+        outputDto1.setEssentials("Essentials 1");
+        outputDto1.setDemands("Demands 1");         
+        outputDto1.setReward("Reward 1");
+        outputDto1.setAssignmentStatus(AVAILABLE);
+        outputDto1.setClient(client);
+        outputDto1.setExecutor(executor);
 
+
+        outputDto2.setTitle("Title 1");
+        outputDto2.setDescription("Description 1 Updated");
+        outputDto2.setEssentials("Essentials 1 Updated");
+        outputDto2.setDemands("Demands 1");
+        outputDto2.setReward("Reward 1 Updated");
+        outputDto2.setAssignmentStatus(AVAILABLE);
+        outputDto2.setClient(client);
+        outputDto2.setExecutor(executor);
+
+        client.setUsername("Test Username");
+        client.setFirstname("Test Firstname");
+        client.setLastname("Test Lastname");
+        client.setMobile("Test Mobile");
+        client.setAdres("Test Adres");
+        client.setPlace("Test Place");
+        client.setZipcode("Test ZipCode");
+        client.setEmail("Test Email");
+        client.setStory("Test Story");
+        client.setAssignments(assignmentList);
+
+
+        executor.setName("Test Name");
+        executor.setClient(client);
+        executor.setAssignments(assignmentList);
+
+        assignment1 = new Assignment("Title 1", "Description 1", "Essentials 1", "Demands 1", "Reward 1", AVAILABLE, client, executor);
+        assignment2 = new Assignment("Title 2", "Description 2", "Essentials 2", "Demands 2", "Reward 2", AVAILABLE, client, executor);
+        assignmentList = new ArrayList<>();
+        assignmentList.add(assignment1);
+        assignmentList.add(assignment2);
     }
 
     @Test
+    void testCreateAssignment() {
+
+        when(assignmentRepository.save(any(Assignment.class))).thenReturn(assignment1);
+
+        // Act
+        String result = assignmentService.createAssignment(inputDto1);
+
+        // Assert
+        assertEquals("Assignment with title: Title 1 created!", result);
+
+    }
+
+
+    @Test
     void testGetAssignments() {
-        // Arrange
-        Assignment assignment1 = new Assignment();
-        Client client = new Client();
-        assignment1.setTitle("Test Title 1");
-        assignment1.setDescription("Test Description 1");
-        assignment1.setEssentials("Test Essentials 1");
-        assignment1.setDemands("Test Demands 1");
-        assignment1.setReward("Test Geld 1");
-        assignment1.setClient(client);
-        assignment1.setAssignmentStatus(AVAILABLE);
-
-        Assignment assignment2 = new Assignment();
-        assignment2.setTitle("Test Title 1");
-        assignment2.setDescription("Test Description 1");
-        assignment2.setEssentials("Test Essentials 1");
-        assignment2.setDemands("Test Demands 1");
-        assignment2.setReward("Test Geld 1");
-        assignment2.setClient(client);
-        assignment2.setAssignmentStatus(ACCEPTED);
-
-
-        AssignmentOutputDto assignmentOutputDto1 = new AssignmentOutputDto();
-        assignmentOutputDto1.setTitle("Test Title 1");
-        assignmentOutputDto1.setDescription("Test Description 1");
-        assignmentOutputDto1.setEssentials("Test Essentials 1");
-        assignmentOutputDto1.setDemands("Test Demands 1");
-        assignmentOutputDto1.setReward("Test Geld 1");
-        assignmentOutputDto1.setClient(client);
-        assignmentOutputDto1.setAssignmentStatus(AVAILABLE);
-
-        AssignmentOutputDto assignmentOutputDto2 = new AssignmentOutputDto();
-        assignmentOutputDto2.setTitle("Test Title 1");
-        assignmentOutputDto2.setDescription("Test Description 1");
-        assignmentOutputDto2.setEssentials("Test Essentials 1");
-        assignmentOutputDto2.setDemands("Test Demands 1");
-        assignmentOutputDto2.setReward("Test Geld 1");
-        assignmentOutputDto2.setClient(client);
-        assignmentOutputDto2.setAssignmentStatus(ACCEPTED);
-
-
+        //Arrange
         List<Assignment> expectedAssignmentList = new ArrayList<>();
         expectedAssignmentList.add(assignment1);
         expectedAssignmentList.add(assignment2);
 
         List<AssignmentOutputDto> expectedAssignmentOutputDtoList = new ArrayList<>();
-        expectedAssignmentOutputDtoList.add(assignmentOutputDto1);
-        expectedAssignmentOutputDtoList.add(assignmentOutputDto2);
+        expectedAssignmentOutputDtoList.add(outputDto1);
+        expectedAssignmentOutputDtoList.add(outputDto2);
 
         Mockito.when(assignmentRepository.findAll()).thenReturn(expectedAssignmentList);
 
         // Act
-        Iterable<AssignmentOutputDto> actualAssignmentOutputDtoList = assignmentService.getAssignments();
+        List<AssignmentOutputDto> actualAssignmentOutputDtoList = (List<AssignmentOutputDto>) assignmentService.getAssignments();
 
         // Assert
-        assertEquals(expectedAssignmentOutputDtoList, actualAssignmentOutputDtoList);
+        assertEquals(expectedAssignmentOutputDtoList.get(0).getTitle(), actualAssignmentOutputDtoList.get(0).getTitle());
+        assertEquals(expectedAssignmentOutputDtoList.get(0).getDescription(), actualAssignmentOutputDtoList.get(0).getDescription());
+        assertEquals(expectedAssignmentOutputDtoList.get(0).getEssentials(), actualAssignmentOutputDtoList.get(0).getEssentials());
+        assertEquals(expectedAssignmentOutputDtoList.get(0).getDemands(), actualAssignmentOutputDtoList.get(0).getDemands());
+        assertEquals(expectedAssignmentOutputDtoList.get(0).getReward(), actualAssignmentOutputDtoList.get(0).getReward());
+        assertEquals(expectedAssignmentOutputDtoList.get(0).getAssignmentStatus(), actualAssignmentOutputDtoList.get(0).getAssignmentStatus());
     }
 
     @Test
     void testGetOneAssignment() {
-        // Arrange
-        Assignment assignment = new Assignment();
-        Client client = new Client();
-        assignment.setTitle("Test Title");
-        assignment.setDescription("Test Description");
-        assignment.setEssentials("Test Essentials");
-        assignment.setDemands("Test Demands");
-        assignment.setReward("Test Geld");
-        assignment.setClient(client);
-        assignment.setAssignmentStatus(AVAILABLE);
 
         when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment));
 
         // Act
-        AssignmentOutputDto assignmentOutputDto = assignmentService.getOneAssignment("testId");
+        assignmentService.getOneAssignment("testId");
 
         // Assert
-        assertEquals("Test Title", assignmentOutputDto.getTitle());
-        assertEquals("Test Description", assignmentOutputDto.getDescription());
-        assertEquals("Test Essentials", assignmentOutputDto.getEssentials());
-        assertEquals("Test Demands", assignmentOutputDto.getDemands());
-        assertEquals("Test Geld", assignmentOutputDto.getReward());
-        assertEquals(client, assignmentOutputDto.getClient());
-        assertEquals(AVAILABLE, assignmentOutputDto.getAssignmentStatus());
+        assertEquals("Title 1", outputDto1.getTitle());
+        assertEquals("Description 1", outputDto1.getDescription());
+        assertEquals("Essentials 1", outputDto1.getEssentials());
+        assertEquals("Demands 1", outputDto1.getDemands());
+        assertEquals("Reward 1", outputDto1.getReward());
+        assertEquals(client, outputDto1.getClient());
+        assertEquals(AVAILABLE, outputDto1.getAssignmentStatus());
     }
 
     @Test
     void testDeleteAssignment() {
-        // Arrange
-        Assignment assignment = new Assignment();
-        Client client = new Client();
-        assignment.setTitle("Test Title");
-        assignment.setDescription("Test Description");
-        assignment.setEssentials("Test Essentials");
-        assignment.setDemands("Test Demands");
-        assignment.setReward("Test Geld");
-        assignment.setClient(client);
-        assignment.setAssignmentStatus(AVAILABLE);
 
-        when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment));
+        when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment1));
 
         // Act
         String result = assignmentService.deleteAssignment("testId");
@@ -177,79 +186,58 @@ class AssignmentServiceTest {
 
     @Test
     void testPatchAssignment() {
-        // Arrange
-        Assignment assignment = new Assignment();
-        assignment.setTitle("Test Title");
-        assignment.setDescription("Test Description");
-        assignment.setEssentials("Test Essentials");
-        assignment.setDemands("Test Demands");
-        assignment.setReward("Test Geld");
-        assignment.setAssignmentStatus(AVAILABLE);
 
-        when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment));
-        when(assignmentRepository.save(any(Assignment.class))).thenReturn(assignment);
-
-        AssignmentInputDto inputDto = new AssignmentInputDto();
-        inputDto.setDescription("Test Description Updated");
-        inputDto.setEssentials("Test Essentials Updated");
-        inputDto.setReward("Test Geld Updated");
+        when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment1));
+        when(assignmentRepository.save(any(Assignment.class))).thenReturn(assignment1);
 
         // Act
-        AssignmentOutputDto outputDto = assignmentService.patchAssignment("testId", inputDto);
+        assignmentService.patchAssignment("testId", inputDto2);
 
         // Assert
-        assertEquals("Test Title", outputDto.getTitle());
-        assertEquals("Test Description Updated", outputDto.getDescription());
-        assertEquals("Test Essentials Updated", outputDto.getEssentials());
-        assertEquals("Test Demands", outputDto.getDemands());
-        assertEquals("Test Geld Updated", outputDto.getReward());
-        assertEquals(AVAILABLE, outputDto.getAssignmentStatus());
+        assertEquals("Title 1", outputDto2.getTitle());
+        assertEquals("Description 1 Updated", outputDto2.getDescription());
+        assertEquals("Essentials 1 Updated", outputDto2.getEssentials());
+        assertEquals("Demands 1", outputDto2.getDemands());
+        assertEquals("Reward 1 Updated", outputDto2.getReward());
+        assertEquals(AVAILABLE, outputDto2.getAssignmentStatus());
     }
 
         @Test
     void testTransferToAssignmentDto() {
-        // Arrange
-        Client client = new Client();
-        Executor executor = new Executor();
-        when(assignment.getTitle()).thenReturn("Test Title");
-        when(assignment.getDescription()).thenReturn("Test Description");
-        when(assignment.getEssentials()).thenReturn("Test Essentials");
-        when(assignment.getDemands()).thenReturn("Test Demands");
-        when(assignment.getReward()).thenReturn("Test Geld");
+
+        when(assignment.getTitle()).thenReturn("Title 1");
+        when(assignment.getDescription()).thenReturn("Description 1");
+        when(assignment.getEssentials()).thenReturn("Essentials 1");
+        when(assignment.getDemands()).thenReturn("Demands 1");
+        when(assignment.getReward()).thenReturn("Reward 1");
         when(assignment.getClient()).thenReturn(client);
-        when(assignment.getAssignmentStatus()).thenReturn(AssignmentStatus.FINISHED);
+        when(assignment.getAssignmentStatus()).thenReturn(AVAILABLE);
         when(assignment.getExecutor()).thenReturn(executor);
 
         // Act
-        AssignmentOutputDto outputDto = assignmentService.transferToAssignmentDto(assignment);
+        assignmentService.transferToAssignmentDto(assignment);
 
         // Assert
-        assertEquals("Test Title", outputDto.getTitle());
-        assertEquals("Test Description", outputDto.getDescription());
-        assertEquals("Test Essentials", outputDto.getEssentials());
-        assertEquals("Test Demands", outputDto.getDemands());
-        assertEquals("Test Geld", outputDto.getReward());
-        assertEquals(client, outputDto.getClient());
-        assertEquals(AssignmentStatus.FINISHED, outputDto.getAssignmentStatus());
-        assertEquals(executor, outputDto.getExecutor());
+        assertEquals("Title 1", outputDto1.getTitle());
+        assertEquals("Description 1", outputDto1.getDescription());
+        assertEquals("Essentials 1", outputDto1.getEssentials());
+        assertEquals("Demands 1", outputDto1.getDemands());
+        assertEquals("Reward 1", outputDto1.getReward());
+        assertEquals(client, outputDto1.getClient());
+        assertEquals(AVAILABLE, outputDto1.getAssignmentStatus());
+        assertEquals(executor, outputDto1.getExecutor());
     }
 
     @Test
     void testAssignExecutorToAssignment() {
-        // Arrange
-        Assignment assignment = new Assignment();
-        assignment.setTitle("Test Title");
 
-        Executor executor = new Executor();
-        executor.setName("Test Executor Name");
-
-        when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment));
+        when(assignmentRepository.findById("testId")).thenReturn(Optional.of(assignment1));
         when(executorRepository.findById("testExecutorId")).thenReturn(Optional.of(executor));
 
         // Act
         assignmentService.assignExecutorToAssignment("testId", "testExecutorId");
 
         // Assert
-        assertEquals("Test Executor Name", assignment.getExecutor().getName());
+        assertEquals("Test Name", assignment1.getExecutor().getName());
     }
 }

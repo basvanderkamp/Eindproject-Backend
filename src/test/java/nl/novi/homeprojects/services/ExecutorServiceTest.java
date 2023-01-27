@@ -4,6 +4,7 @@ import nl.novi.homeprojects.models.Assignment;
 import nl.novi.homeprojects.models.Executor;
 import nl.novi.homeprojects.repositorys.AssignmentRepository;
 import nl.novi.homeprojects.repositorys.ExecutorRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static nl.novi.homeprojects.models.AssignmentStatus.ACCEPTED;
+import static nl.novi.homeprojects.models.AssignmentStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -20,41 +21,62 @@ import static org.mockito.Mockito.when;
 class ExecutorServiceTest {
 
     @Mock
-    Executor executor;
-    @Mock
     ExecutorRepository executorRepository;
     @Mock
     AssignmentRepository assignmentRepository;
     @InjectMocks
     ExecutorService executorService;
+    Executor executor;
+    Assignment assignment;
+    List<Assignment> assignmentList;
 
-    @Test
-    void finishAssignment() {
-        //Arrange
-        Executor executor1 = new Executor();
-        Assignment assignment = new Assignment();
-        List<Assignment> assignmentList = new ArrayList<>();
+    @BeforeEach
+    void setUp() {
+
+        executor = new Executor();
+        assignment = new Assignment();
+        assignmentList = new ArrayList<>();
+
         assignment.setTitle("Test Title");
         assignment.setDescription("Test Description");
         assignment.setEssentials("Test Essentials");
         assignment.setDemands("Test Demands");
         assignment.setReward("Test Geld");
         assignment.setAssignmentStatus(ACCEPTED);
-        assignment.setExecutor(executor1);
+        assignment.setExecutor(executor);
 
         assignmentList.add(assignment);
 
-        executor1.setName("Test Name");
-        executor1.setClient(null);
-        executor1.setAssignments(assignmentList);
+        executor.setName("Test Name");
+        executor.setClient(null);
+        executor.setAssignments(assignmentList);
+    }
 
-        when(executorRepository.findById("executorId")).thenReturn(Optional.of(executor1));
+    @Test
+    void finishAssignment() {
+
+        when(executorRepository.findById("executorId")).thenReturn(Optional.of(executor));
         when(assignmentRepository.findById("assignmentId")).thenReturn(Optional.of(assignment));
 
         // Act
         executorService.finishAssignment("executorId", "assignmentId");
 
         // Assert
-        assertEquals(0 , executor1.getAssignments().size());
+        assertEquals(0 , executor.getAssignments().size());
+        assertEquals(FINISHED, assignment.getAssignmentStatus());
+    }
+
+    @Test
+    void cancelAssignment() {
+
+        when(executorRepository.findById("executorId")).thenReturn(Optional.of(executor));
+        when(assignmentRepository.findById("assignmentId")).thenReturn(Optional.of(assignment));
+
+        // Act
+        executorService.cancelAssignment("executorId", "assignmentId");
+
+        // Assert
+        assertEquals(0 , executor.getAssignments().size());
+        assertEquals(AVAILABLE, assignment.getAssignmentStatus());
     }
 }

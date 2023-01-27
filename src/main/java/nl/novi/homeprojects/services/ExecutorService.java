@@ -9,6 +9,8 @@ import nl.novi.homeprojects.repositorys.AssignmentRepository;
 import nl.novi.homeprojects.repositorys.ClientRepository;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+
+import static nl.novi.homeprojects.models.AssignmentStatus.AVAILABLE;
 import static nl.novi.homeprojects.models.AssignmentStatus.FINISHED;
 
 @Service
@@ -41,6 +43,27 @@ public class ExecutorService {
             executor.deleteAssignment(assignment);
             executorRepository.save(executor);
             assignment.setAssignmentStatus(FINISHED);
+            assignmentRepository.save(assignment);
+        }
+    }
+
+
+    public static void cancelAssignment(String id, String assignmentId ) {
+
+        Optional<Assignment> canceledAssignment = assignmentRepository.findById(assignmentId);
+        Optional<Executor> optionalExecutor = executorRepository.findById(id);
+
+        if (canceledAssignment.isEmpty()) {
+            throw new RecordNotFoundException("assignment with title id: " + assignmentId + " not found");
+        } else if (optionalExecutor.isEmpty()) {
+            throw new RecordNotFoundException("Executor with username id: " + id + " not found");
+        }else {
+            Assignment assignment = canceledAssignment.get();
+            Executor executor = optionalExecutor.get();
+
+            executor.deleteAssignment(assignment);
+            executorRepository.save(executor);
+            assignment.setAssignmentStatus(AVAILABLE);
             assignmentRepository.save(assignment);
         }
     }

@@ -78,6 +78,7 @@ public class AssignmentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].title").value("Titel 1"))
                 .andExpect(jsonPath("$[1].title").value("Titel 2"))
+                .andExpect(jsonPath("$[2].title").value("Titel 3"))
         ;
     }
 
@@ -102,7 +103,6 @@ public class AssignmentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(assignmentInputDto1)))
                 .andExpect(status().isCreated())
-
         ;
     }
 
