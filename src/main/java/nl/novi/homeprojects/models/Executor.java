@@ -1,10 +1,10 @@
 package nl.novi.homeprojects.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,21 +15,26 @@ import java.util.List;
 @Entity
 @Table(name = "executor")
 public class Executor {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String name;
 
-    private String fullName;
-    private int age;
-    private String mobile;
-    private String adres;
-    private String place;
-    private String zipcode;
-    private String email;
+    public Executor(String name) {
+        this.name = name;
+    }
 
-
-    //Relations
     @OneToMany(mappedBy = "executor")
-    private List<Assignment> assignment;
+    private List<Assignment> assignments;
+
+    public void deleteAssignment(Assignment assignment) {
+        this.assignments.remove(assignment);
+        assignment.setExecutor(null);
+    }
+
+    @OneToOne(mappedBy = "executor")
+    @JsonIgnore
+    private Client client;
 }
+
+
+
+
